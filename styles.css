@@ -1,29 +1,117 @@
 body {
     font-family: Arial, sans-serif;
     margin: 20px;
+    background-color: #f9f9f9;
+    color: #333;
 }
+
+p {
+    margin: 0; 
+}
+
+.app-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    max-width: 800px;
+    margin: 175px auto;
+}
+
 table {
     width: 100%;
     border-collapse: collapse;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    overflow: hidden;
 }
+
+.dark-mode table {
+    box-shadow: 1px 2px 8px 3px rgb(255 248 248 / 10%);
+}
+
+.light-mode thead {
+    background-color: red;
+}
+
 th, td {
-    border: 1px solid #ddd;
-    padding: 8px;
+    border: none; /* Remove inner borders */
+    padding: 12px 6px;
     text-align: left;
 }
+
 th {
-    background-color: #f4f4f4;
+    background-color: #d3cece;
+    font-weight: bold;
 }
-button {
+
+td:first-child {
+    width: 5px;
+}
+
+td {
+    vertical-align: middle;
+}
+
+td:nth-child(2) {
+    max-height: 5em;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 5;
+    -webkit-box-orient: vertical;
+    margin-bottom: 27px;
+}
+
+tr:nth-child(even) {
+    background-color: #f1f0f0;
+}
+
+.dark-mode tr:nth-child(even) {
+    background-color: #3d3d3d;
+}
+
+button,
+select {
     cursor: pointer;
     margin: 5px;
+    padding: 8px 12px;
+    border: none;
+    border-radius: 4px;
+    background-color: rgb(39 170 183);
+    color: white;
+    font-size: 14px;
+    transition: background-color 0.3s ease;
 }
+
+button:hover {
+    background-color: #0056b3;
+}
+
+button:active {
+    background-color: #004494;
+}
+
 .controls {
     margin-bottom: 10px;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    width: 100%;
 }
+
+.window-controls {
+    display: none;
+}
+
+.hand-cursor {
+    cursor: pointer; /* Hand cursor */
+}
+
+.fist-cursor {
+    cursor: grabbing; /* Fist cursor */
+}
+
+/* Pop up Notifications */
 .copied-message {
     position: fixed;
     bottom: 20px;
@@ -35,51 +123,11 @@ button {
     border-radius: 5px;
     display: none;
 }
-.dark-mode {
-    background-color: #333;
-    color: white;
-}
-.dark-mode th {
-    background-color: #555;
-}
-.dark-mode button {
-    background-color: #555;
-    color: white;
-}
-.switch {
-    position: relative;
-    display: inline-block;
-    width: 60px;
-    height: 34px;
-}
-.switch input {
-    opacity: 0;
-    width: 0;
-    height: 0;
-}
-.slider {
+
+.copy-selected-button {
     position: absolute;
-    cursor: pointer;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: #ccc;
-    transition: .4s;
 }
-.slider:before {
-    position: absolute;
-    content: "";
-    height: 26px;
-    width: 26px;
-    left: 4px;
-    bottom: 4px;
-    background-color: white;
-    transition: .4s;
-}
-input:checked + .slider {
-    background-color: #2196F3;
-}
+
 .no-selection-message {
     position: fixed;
     bottom: 50px;
@@ -91,12 +139,99 @@ input:checked + .slider {
     border-radius: 5px;
     display: none;
 }
+
+/* Dark Mode Toggle */
+.dark-mode {
+    background-color: #333;
+    color: white;
+}
+
+.dark-mode th {
+    background-color: #555;
+}
+
+.dark-mode button,
+.dark-mode select {
+    background-color: #555;
+    color: white;
+}
+
+.switch {
+    position: absolute;
+    right: 25px;
+    top: 25px;
+    display: inline-block;
+    width: 60px;
+    height: 34px;
+}
+
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    transition: .4s;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 26px;
+    width: 26px;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    transition: .4s;
+}
+
+input:checked + .slider {
+    background-color: #2196F3;
+}
+
 input:checked + .slider:before {
     transform: translateX(26px);
 }
+
 .slider.round {
     border-radius: 34px;
 }
+
 .slider.round:before {
     border-radius: 50%;
+}
+
+/* Responsive Design */
+@media screen and (min-width: 767px) {
+    .window-controls{
+        display: block;
+    }
+    
+    th:first-child,
+    td:first-child {
+        padding-left: 10px;
+    }
+
+    td:nth-child(2) {
+        position: relative;
+        top: 13px;
+        min-width: 400px;
+    }
+
+    td:nth-child(3),
+    td:nth-child(4) {
+        width: 5px;
+    }
+
+    td:nth-child(5) {
+        padding-right: 10px;
+    }
 }

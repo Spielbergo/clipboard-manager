@@ -66,6 +66,7 @@ function renderClipboardItems() {
         row.draggable = true;
         row.ondragstart = (event) => dragStart(event, index);
         row.ondragover = (event) => dragOver(event);
+        row.ondragleave = (event) => dragLeave(event);
         row.ondrop = (event) => drop(event, index);
 
         const selectCell = document.createElement('td');
@@ -79,7 +80,9 @@ function renderClipboardItems() {
 
         const copyCell = document.createElement('td');
         const copyButton = document.createElement('button');
-        copyButton.textContent = 'Copy';
+        const copyIcon = document.createElement('i');
+        copyIcon.className = 'fa-regular fa-copy';
+        copyButton.appendChild(copyIcon);
         copyButton.onclick = () => copyToClipboard(item, copyButton);
         copyCell.appendChild(copyButton);
 
@@ -103,19 +106,33 @@ function renderClipboardItems() {
     // Add copy selected items button at the bottom
     const bottomCopyButton = document.createElement('button');
     bottomCopyButton.textContent = 'Copy Selected';
+    bottomCopyButton.className = 'copy-selected-button'; 
     bottomCopyButton.onclick = copySelectedItems;
+    bottomCopyButton.style.display = 'none';
     clipboardList.appendChild(bottomCopyButton);
+
+    // Event listener to show/hide the "Copy Selected" button
+    clipboardList.addEventListener('change', () => {
+        const checkedItems = document.querySelectorAll('.item-checkbox:checked').length;
+        bottomCopyButton.style.display = checkedItems > 1 ? 'block' : 'none';
+    });
 }
 
 // Drag and drop functions
 function dragStart(event, index) {
     draggedIndex = index;
     event.dataTransfer.effectAllowed = 'move';
+    event.target.classList.add('fist-cursor'); // Add fist cursor class
 }
 
 function dragOver(event) {
     event.preventDefault();
     event.dataTransfer.dropEffect = 'move';
+    event.target.classList.add('hand-cursor'); // Add hand cursor class
+}
+
+function dragLeave(event) {
+    event.target.classList.remove('hand-cursor'); // Remove hand cursor class
 }
 
 function drop(event, index) {
@@ -128,12 +145,14 @@ function drop(event, index) {
         renderClipboardItems();
     }
     draggedIndex = null;
+    event.target.classList.remove('fist-cursor'); // Remove fist cursor class
+    event.target.classList.remove('hand-cursor'); // Remove hand cursor class
 }
 
 // Copy selected items to the clipboard
 function copySelectedItems() {
     const checkboxes = document.querySelectorAll('.item-checkbox:checked');
-    if (checkboxes.length === 0) {
+    if (checkboxes.length <= 1) {
         noSelectionMessage.style.display = 'block';
         setTimeout(() => noSelectionMessage.style.display = 'none', 1000);
         return;
@@ -141,6 +160,10 @@ function copySelectedItems() {
     const selectedItems = Array.from(checkboxes).map(checkbox => checkbox.closest('tr').children[1].textContent);
     const textToCopy = selectedItems.join('\n');
     copyToClipboard(textToCopy);
+
+    // Show copied message
+    copiedMessage.style.display = 'block';
+    setTimeout(() => copiedMessage.style.display = 'none', 1000);
 }
 
 // Remove an item from the clipboard items
@@ -153,22 +176,18 @@ function removeItem(index) {
 // Copy text to the clipboard and show a copied message
 function copyToClipboard(text, button) {
     navigator.clipboard.writeText(text).then(() => {
-        // Change button appearance to green with a check mark
-        const originalText = button.textContent;
-        button.textContent = '✔️';
-        button.style.backgroundColor = 'green';
-        button.style.color = 'white';
+        // Change button content to a Font Awesome check icon
+        const originalContent = button.innerHTML;
+        button.innerHTML = '<i class="fa-solid fa-check"></i>';
 
-        // Revert button appearance after 1 second
+        // Revert button content after 1 second
         setTimeout(() => {
-            button.textContent = originalText;
-            button.style.backgroundColor = '';
-            button.style.color = '';
-        }, 1000);
+            button.innerHTML = originalContent;
+        }, 2000);
 
         // Show copied message
         copiedMessage.style.display = 'block';
-        setTimeout(() => copiedMessage.style.display = 'none', 1000);
+        setTimeout(() => copiedMessage.style.display = 'none', 2000);
     });
 }
 
