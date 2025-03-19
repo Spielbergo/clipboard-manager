@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clipboard Tracker</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="dark-mode">
+    <h1>Clipboard Tracker</h1>
+    <div class="controls">
+        <button onclick="clearAll()">Clear All</button>
+        <button id="redo-button" onclick="redoClear()" style="display: none;">Redo</button>
+        <div>
+            <button onclick="popOut()">Pop Out</button>
+            <select id="window-size" onchange="changeWindowSize()">
+                <option value="400x300">400x300</option>
+                <option value="800x600" selected>800x600</option>
+                <option value="1024x768">1024x768</option>
+                <option value="1280x1024">1280x1024</option>
+            </select>        
+        </div>
+        <button onclick="pasteFromClipboard()">Paste from Clipboard</button>
+        <label class="switch">
+            <input type="checkbox" id="mode-toggle" checked>
+            <span class="slider round"></span>
+        </label>
+    </div>
+    <table>
+        <thead>
+            <tr>
+                <th><input type="checkbox" id="select-all" onclick="toggleSelectAll(this)"></th>
+                <th>Copied Text</th>
+                <th>Copy Again</th>
+                <th>Remove</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody id="clipboard-list"></tbody>
+    </table>
+    <div id="copied-message" class="copied-message">Copied!</div>
+    <div id="no-selection-message" class="copied-message">No items selected!</div>
+    
+    <script src="script.js"></script>
+</body>
+</html>
